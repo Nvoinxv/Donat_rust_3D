@@ -1,9 +1,13 @@
 // IMPORT FILE PENTING 
 mod MATRIX_ROTASI_3D;
+mod MEMBUAT_DONAT;
 
 // PANGGIL KELAS DAN STRUKTUR DATA
 use MATRIX_ROTASI_3D::operasi_rotasi_matrix;
 use MATRIX_ROTASI_3D::data_matrix_3d;
+
+use MEMBUAT_DONAT::MembuatDonat3D;
+use MEMBUAT_DONAT::VektorData3D;
 
 // PANGGIL FUNGSI
 use MATRIX_ROTASI_3D::print_matrix_3d;
@@ -37,4 +41,6 @@ fn main() {
 
     println!("HASIL ROTASI MATRIX Z: ");
     print_matrix_3d(&hasil_z);
+
+    
 }

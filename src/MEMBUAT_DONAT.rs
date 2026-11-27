@@ -9,21 +9,21 @@ const SUDUT_SETENGAH : f64 = 180.0;
 
 // MEMBUAT STRUCT VEKTOR
 pub struct VektorData3D {
-    x : f64,
-    y : f64,
-    z : f64,
+    pub x : f64,
+    pub y : f64,
+    pub z : f64,
 }
 
 // SEGMEN U DAN V
 pub struct SegmenVariabelDonat {
-    let segmen_u : i64 = 30,
-    let segmen_v : i64 = 15,
+    segmen_u : i64,
+    segmen_v : i64,
 }
 
 // VARIABEL VEKTOR 
 // MENYIMPAN DONAT
 pub struct VektorVariabelDonat3D {
-    vertex : Vec<VektorData3D>,
+    pub vertex : Vec<VektorData3D>,
 }
 
 pub struct MembuatDonat3D;
@@ -57,12 +57,12 @@ impl MembuatDonat3D {
             }
         }
 
-        return hasil_perhitungan;
+        hasil_perhitungan
     }
 
-    pub fn akses_indeks(u : i64,
-        v : i64) -> i64 {
-        if segmen_u < 0  && segmen_v < 0 {
+    pub fn akses_indeks(&self, mut u : i64,
+        mut v : i64) -> i64 {
+        if self.segmen_u < 0  && self.segmen_v < 0 {
             println!("TIDAK BISA NEGATIF!");
             return 0;
         }
@@ -72,10 +72,10 @@ impl MembuatDonat3D {
             return 0;
         }
 
-        u = segmen_u % u;
-        v = segmen_v % v;
+        u = self.segmen_u % u;
+        v = self.segmen_v % v;
 
-        return u * segmen_v + v;
+        return u * self.segmen_v + v;
     }
 
     pub fn koordinat_donat_3d(R : f64, r : f64,
@@ -100,19 +100,19 @@ impl MembuatDonat3D {
         for i in 0..segmen_u {
             for j in 0..segmen_v {
 
-                if segmen_u == 0.0 {
+                if segmen_u == 0 {
                     break;
                 }
 
-                u = 2.0 * i * PI / segmen_u;
+                u = 2.0 * (i as f64) * PI / (segmen_u as f64);
 
-                if segmen_v == 0.0 {
+                if segmen_v == 0 {
                     break;
                 }
 
-                v = 2.0 * j * PI / segmen_v;
+                v = 2.0 * (j as f64) * PI / (segmen_v as f64);
 
-                VektorData3D koordinat_vertex = koordinat_donat_3d(
+                let koordinat_vertex : VektorData3D = Self::koordinat_donat_3d(
                     R, r,
                     u, v);
 
@@ -123,10 +123,10 @@ impl MembuatDonat3D {
 
     pub fn transformasi_linear(m : data_matrix_3d, 
         v : VektorData3D) -> VektorData3D {
-        return {
-            [m.matrix_3d[0][0] * v.x + m.matrix_3d[0][1] * v.y + m.matrix_3d[0][2] * v.z],
-            [m.matrix_3d[1][0] * v.x + m.matrix_3d[1][1] * v.y + m.matrix_3d[1][2] * v.z],
-            [m.matrix_3d[2][0] * v.x + m.matrix_3d[2][1] * v.y + m.matrix_3d[2][2] * v.z],
+        VektorData3D {
+            x: m.matrix_3d[0][0] * v.x + m.matrix_3d[0][1] * v.y + m.matrix_3d[0][2] * v.z,
+            y: m.matrix_3d[1][0] * v.x + m.matrix_3d[1][1] * v.y + m.matrix_3d[1][2] * v.z,
+            z: m.matrix_3d[2][0] * v.x + m.matrix_3d[2][1] * v.y + m.matrix_3d[2][2] * v.z,
         }
     }
 
@@ -148,21 +148,21 @@ impl MembuatDonat3D {
         if (mode_rotasi_koordinat == 1) {
             let rotasi_posisi_x : data_matrix_3d = operasi_rotasi_matrix.rotasi_x(theta);
 
-            for (idx, titik) in 0..(self.VektorVariabelDonat3D.vertex) {
+            for (idx, titik) in (self.VektorVariabelDonat3D.vertex) {
                 VektorData3D hasil_x = transformasi_linear(
                     rotasi_posisi_x, titik);
             }
         } else if (mode_rotasi_koordinat == 2) {
             let rotasi_posisi_y : data_matrix_3d = operasi_rotasi_matrix.rotasi_y(theta);
 
-            for (idx, titik) in 0..(self.VektorVariabelDonat3D.vertex) {
+            for (idx, titik) in (self.VektorVariabelDonat3D.vertex) {
                 VektorData3D hasil_y = transformasi_linear(
                     rotasi_posisi_y, titik);
             }
         } else if (mode_rotasi_koordinat == 3) {
             let rotasi_posisi_z : data_matrix_3d = operasi_rotasi_matrix.rotasi_z(theta);
             
-            for (idx, titik) in 0..(self.VektorVariabelDonat3D.vertex) {
+            for (idx, titik) in (self.VektorVariabelDonat3D.vertex) {
                  VektorData3D hasil_z = transformasi_linear(
                       rotasi_posisi_z, titik);
             }
