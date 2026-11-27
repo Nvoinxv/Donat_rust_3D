@@ -1,3 +1,4 @@
+// IMPORT FILE DARI PROJEK
 mod MATRIX_ROTASI_3D;
 
 use MATRIX_ROTASI_3D::data_matrix_3d;
@@ -13,20 +14,16 @@ pub struct VektorData3D {
     z : f64,
 }
 
-// MEMBUAT STRUCT VARIABEL DONAT
-pub struct DonatVariabel3D {
-    VektorData3D {
-        R : f64,
-        r : f64,
-        u : f64,
-        v : f64
-    }
-}
-
 // SEGMEN U DAN V
 pub struct SegmenVariabelDonat {
     let segmen_u : i64 = 30,
     let segmen_v : i64 = 15,
+}
+
+// VARIABEL VEKTOR 
+// MENYIMPAN DONAT
+pub struct VektorVariabelDonat3D {
+    vertex : Vec<VektorData3D>,
 }
 
 pub struct MembuatDonat3D;
@@ -90,13 +87,38 @@ impl MembuatDonat3D {
         }
     }
 
-    pub fn penggabungan_torus(R : f64, r : f64, 
+    pub fn penggabungan_torus(&self, R : f64, r : f64, 
         segmen_u : i64, segmen_v : i64) {
         // JADI KITA MEMANGGIL SUATU VEKTOR 
         // BERTIPE DATA STRUCT DONAT VARIABEL
         // AGAR BISA DIMASUKKAN
         // HASIL PERHITUNGAN KOORDINAT
         // KE DALAM SATU VEKTOR VARIABEL
+        let mut u : f64 = 0.0;
+        let mut v : f64 = 0.0;
+
+        for i in 0..segmen_u {
+            for j in 0..segmen_v {
+
+                if segmen_u == 0.0 {
+                    break;
+                }
+
+                u = 2.0 * i * PI / segmen_u;
+
+                if segmen_v == 0.0 {
+                    break;
+                }
+
+                v = 2.0 * j * PI / segmen_v;
+
+                VektorData3D koordinat_vertex = koordinat_donat_3d(
+                    R, r,
+                    u, v);
+
+                self.VektorVariabelDonat3D.vertex.push(koordinat_vertex);
+            }
+        }
     }
 
     pub fn transformasi_linear(m : data_matrix_3d, 
@@ -108,8 +130,42 @@ impl MembuatDonat3D {
         }
     }
 
-    pub fn rotasi_geometris_donat(theta : f64, 
-        pemilihan_rotasi : bool) {
+    pub fn rotasi_geometris_donat(&self, theta : f64, 
+        pemilihan_rotasi : bool,
+        mode_rotasi_koordinat : i64) {
         theta = konversi_theta(theta, pemilihan_rotasi);
+        
+        // TAMBAHKAN GABUNGAN TORUS
+        // LALU, KITA WAJIB MELAKUKAN LOOP
+        // TERUTAMA VARIABEL GABUNGAN TORUS
+        // AGAR BISA DIGUNAKAN DALAM TRANSFORMASI LINEAR
+        
+        // PILIH ROTASI, KITA AKAN MENGGUNAKAN ROTASI
+        // JIKA MEMILIH 1 MAKA MAIN ROTASI X
+        // JIKA MEMILIH 2 MAKA MAIN ROTASI Y
+        // JIKA MEMILIH 3 MAKA MAIN ROTASI Z
+
+        if (mode_rotasi_koordinat == 1) {
+            let rotasi_posisi_x : data_matrix_3d = operasi_rotasi_matrix.rotasi_x(theta);
+
+            for (idx, titik) in 0..(self.VektorVariabelDonat3D.vertex) {
+                VektorData3D hasil_x = transformasi_linear(
+                    rotasi_posisi_x, titik);
+            }
+        } else if (mode_rotasi_koordinat == 2) {
+            let rotasi_posisi_y : data_matrix_3d = operasi_rotasi_matrix.rotasi_y(theta);
+
+            for (idx, titik) in 0..(self.VektorVariabelDonat3D.vertex) {
+                VektorData3D hasil_y = transformasi_linear(
+                    rotasi_posisi_y, titik);
+            }
+        } else if (mode_rotasi_koordinat == 3) {
+            let rotasi_posisi_z : data_matrix_3d = operasi_rotasi_matrix.rotasi_z(theta);
+            
+            for (idx, titik) in 0..(self.VektorVariabelDonat3D.vertex) {
+                 VektorData3D hasil_z = transformasi_linear(
+                      rotasi_posisi_z, titik);
+            }
+        }
     }
 }
